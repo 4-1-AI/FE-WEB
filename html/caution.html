@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>CARE FIRE 감지 시스템</title>
+    <link rel="stylesheet" href="../css/caution.css" />
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="alert-bar">주의</div>
+        <div class="title-row">
+            <div class="title">🧯 CARE FIRE</div>
+            <div class="time"></div>
+        </div>
+        <div>
+            <a href="/mypage" class="mypage-link">마이페이지</a>
+        </div>
+
+        <div class="container">
+            <div class="content">
+                <div class="video">
+                    <div class="live-badge">● 실시간 감지 중</div>
+                    <video id="video" autoplay playsinline muted></video>
+                    <canvas id="overlay"></canvas>
+                </div>
+                <div id="caution"></div>
+
+
+                <div class="info">
+                    <div class="info-box">
+                        <p id="basic">AI 위험 판단도</p>
+                        <p id="orange">79%</p>
+                        <div class="divider"></div>
+                        <p id="basic">확산 속도</p>
+                        <p id="orange">45% 증가</p>
+                        <div class="divider"></div>
+                        <p id="basic">감지 발생 시각: 25/05/17 18:54</p>
+                    </div>
+                    <div class="info-box">
+                        <p id="basic">사용자 응답 대기</p>
+                        <div class="row">
+                            <p id="red" class="countdown">2분 42초 남음</p>
+                            <button class="cancel-btn">✕</button>
+                        </div>
+                    </div>
+                    <button class="warn-btn">주의 단계 🔥</button>
+                </div>
+
+
+            </div>
+            <div class="footer-text">
+                🔔 3분동안 응답이 없을 경우 보호자에게 문자 메시지 발송 및 가까운 119로 자동 신고됩니다.
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/caution.js"></script>
+</body>
+
+</html>
