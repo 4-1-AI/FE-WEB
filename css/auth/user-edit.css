@@ -1,0 +1,145 @@
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fdf6d8;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.signup-box {
+    background-color: white;
+    border-radius: 15px;
+    padding: 50px 200px;
+    width: 460px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.logo h1 {
+    font-size: 24px;
+    color: #FC4C4C;
+    font-weight: bold;
+    margin: 0;
+}
+
+.signup-box h2 {
+    font-size: 14px;
+    color: #444;
+    margin: 50px 0px 10px 70px;
+    text-align: left;
+}
+
+.divider {
+    width: 80%;
+    height: 1px;
+    background-color: #eee;
+    margin: 0px auto 25px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 80%;
+    padding: 12px 14px;
+    padding-left: 38px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.guardian-section {
+    color: #555;
+    width: 80%;
+    margin: 0px auto;
+    font-size: 13px;
+    text-align: center;
+}
+
+.guardian-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.guardian-labels label {
+    width: 48%;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.guardian-pair {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.guardian-pair input {
+    width: 48%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 13px;
+}
+
+.add-btn {
+    color: #fff;
+    background-color: #E1E1E1;
+    border: none;
+    width: 60px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 15px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.signup-btn {
+    width: 80%;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background-color: #7acb7a;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+.signup-btn:hover {
+    background-color: #68b968;
+}
+
+.back-btn-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.back-btn {
+    background-color: #CECECE;
+    border: none;
+    padding: 5px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    color: #fff;
+}
