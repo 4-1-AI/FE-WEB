@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>CARE FIRE 감지 시스템</title>
+    <link rel="stylesheet" href="../../../public/css/main/safe.css" />
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="alert-bar">안전</div>
+        <div class="title-row">
+            <div class="title">🧯 CARE FIRE</div>
+            <div class="time">5/17 07:57</div>
+        </div>
+        <div>
+            <a href="" class="link">로그인</a>
+        </div>
+
+        <div class="container">
+            <div class="content">
+                <div class="video">
+                    <div class="live-badge">● 실시간 감지 중</div>
+                    <video id="video" autoplay playsinline muted></video>
+                    <canvas id="overlay"></canvas>
+                </div>
+                <div id="caution"></div>
+
+
+                <div class="info">
+                    <div class="info-box">
+                        <p id="basic">AI 위험 판단도</p>
+                        <p id="orange">79%</p>
+                        <div class="divider"></div>
+                        <p id="basic">확산 속도</p>
+                        <p id="orange">45% 증가</p>
+                        <div class="divider"></div>
+                        <p>시스템이 정상적으로 작동 중입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../../public/js/video.js"></script>
+    <script src="../../../public/js/common.js"></script>
+</body>
+
+</html>

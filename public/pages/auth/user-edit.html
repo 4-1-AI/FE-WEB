@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>회원정보 수정</title>
+    <link rel="stylesheet" href="../../../public/css/auth/user-edit.css" />
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="signup-box">
+            <div class="logo">
+                <h1>🧯 CARE FIRE</h1>
+            </div>
+            <h2>회원 정보 수정</h2>
+            <div class="divider"></div>
+            <form>
+                <div class="input-group">
+                    <input type="text" placeholder="닉네임" required />
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="아이디" disabled />
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="비밀번호" disabled />
+                </div>
+                <div class="divider"></div>
+                <div class="guardian-section">
+                    <label>보호자 이름</label>
+                    <label>전화번호</label>
+
+                    <div class="guardian-pair">
+                        <input type="text" />
+                        <input type="text" />
+                    </div>
+                    <button type="button" class="add-btn">+</button>
+                </div>
+                <button type="submit" class="signup-btn">수정하기</button>
+                <div>
+                    <button type="button" class="logout-btn">로그아웃</button>
+                    <button type="button" class="delete-btn">회원탈퇴</button>
+                </div>
+            </form>
+            <div class="back-btn-wrapper">
+                <button class="back-btn">뒤로 가기</button>
+            </div>
+        </div>
+    </div>
+    <script src="../../../public/js/auth/user-edit.js"></script>
+    <script src="../../../public/js/auth/logout.js"></script>
+</body>
+
+</html>
