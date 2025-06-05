@@ -8,6 +8,7 @@ const ws = new WebSocket("ws://localhost:8000/ws/stream");
 ws.onopen = () => {
   console.log("✅ WebSocket 연결 완료");
 
+  
   // 웹캠 스트림 시작
   navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     .then((stream) => {
@@ -17,7 +18,7 @@ ws.onopen = () => {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // 1초마다 프레임 캡처 후 전송
+        // 0.5초마다 프레임 캡처 후 전송
         setInterval(() => {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           canvas.toBlob((blob) => {
@@ -27,7 +28,7 @@ ws.onopen = () => {
               }
             });
           }, "image/jpeg", 0.9);
-        }, 500); // 1초 간격
+        }, 500); // 0.5초 간격
       });
     })
     .catch((err) => {
