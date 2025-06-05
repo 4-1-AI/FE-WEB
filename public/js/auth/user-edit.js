@@ -1,120 +1,119 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form');
-    const inputs = form.querySelectorAll('input');
-    const nicknameInput = inputs[0];
-    const idInput = inputs[1];
-    const pwInput = inputs[2];
-    const guardianSection = form.querySelector('.guardian-section');
-    const addBtn = guardianSection.querySelector('.add-btn');
+document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("userId");
 
-    // 저장된 회원정보 불러오기
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (!storedUser) {
-        alert('회원 정보가 없습니다. 로그인 후 이용해주세요.');
-        window.location.href = '../../pages/auth/login.html';
+    if (!userId) {
+        alert("잘못된 접근입니다. 사용자 ID가 없습니다.");
+        location.href = "/pages/auth/login.html";
         return;
     }
 
-    // 입력 필드에 저장된 정보 채우기
-    nicknameInput.value = storedUser.nickname || '';
-    idInput.value = storedUser.id || '';
-    pwInput.value = storedUser.password || '';
+    const form = document.querySelector("form");
+    const nicknameInput = form.querySelector('input[placeholder="닉네임"]');
+    const emailInput = form.querySelector('input[placeholder="이메일"]');
+    const passwordInput = form.querySelector('input[placeholder="비밀번호"]');
+    const guardianSection = document.querySelector(".guardian-section");
+    const addBtn = guardianSection.querySelector(".add-btn");
+    const logoutBtn = document.querySelector(".logout-btn");
+    const deleteBtn = document.querySelector(".delete-btn");
+    const backBtn = document.querySelector(".back-btn");
 
-    // 기존 보호자 정보 표시
-    function renderGuardians(guardians) {
-        const existingPairs = guardianSection.querySelectorAll('.guardian-pair');
-        existingPairs.forEach(pair => guardianSection.removeChild(pair));
+    async function loadUserProfile() {
+        try {
+            const response = await fetch(`http://3.35.212.49:8080/users/${userId}`);
+            if (!response.ok) throw new Error("회원 정보를 불러오지 못했습니다.");
+            const user = await response.json();
 
-        guardians.forEach(({ name, phone }) => {
-            const pairDiv = document.createElement('div');
-            pairDiv.className = 'guardian-pair';
-            pairDiv.innerHTML = `
-          <input type="text" required value="${name}" />
-          <input type="text" required value="${phone}" />
-        `;
-            guardianSection.insertBefore(pairDiv, addBtn);
-        });
+            nicknameInput.value = user.nickname || "";
+            emailInput.value = user.email || "";
+            passwordInput.value = user.password || "";
+
+            localStorage.setItem("userEmail", user.email);
+            localStorage.setItem("userNickname", user.nickname);
+            localStorage.setItem("userPassword", user.password);
+            localStorage.setItem("userGuardians", JSON.stringify(user.guardians || []));
+
+            guardianSection.querySelectorAll(".guardian-pair").forEach((el, idx) => {
+                if (idx > 0) el.remove();
+            });
+
+            const guardians = user.guardians || [];
+            if (guardians.length > 0) {
+                const first = guardianSection.querySelector(".guardian-pair");
+                first.querySelector("input:nth-child(1)").value = guardians[0].name || "";
+                first.querySelector("input:nth-child(2)").value = guardians[0].phoneNumber || "";
+
+                for (let i = 1; i < guardians.length; i++) {
+                    const g = guardians[i];
+                    const newPair = document.createElement("div");
+                    newPair.className = "guardian-pair";
+                    newPair.innerHTML = `
+                        <input type="text" value="${g.name}" />
+                        <input type="text" value="${g.phoneNumber}" />
+                    `;
+                    guardianSection.insertBefore(newPair, addBtn);
+                }
+            }
+        } catch (err) {
+            console.error("사용자 정보 불러오기 실패", err);
+            alert("회원 정보를 불러올 수 없습니다.");
+            location.href = "/pages/auth/login.html";
+        }
     }
-
-    renderGuardians(storedUser.guardians || []);
-
-    // 보호자 입력 추가
-    addBtn.addEventListener('click', () => {
-        const newPair = document.createElement('div');
-        newPair.className = 'guardian-pair';
+    addBtn.addEventListener("click", () => {
+        const newPair = document.createElement("div");
+        newPair.className = "guardian-pair";
         newPair.innerHTML = `
-        <input type="text" required />
-        <input type="text" required />
-      `;
+            <input type="text" />
+            <input type="text" />
+        `;
         guardianSection.insertBefore(newPair, addBtn);
     });
 
-    form.addEventListener('submit', (e) => {
+    // 회원정보 수정
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        // 닉네임 필수 확인
-        if (!nicknameInput.value.trim()) {
-            alert('닉네임은 필수 입력사항입니다.');
-            return;
-        }
-
-        // 보호자 정보 최소 1쌍 필수 확인
-        const guardianPairs = guardianSection.querySelectorAll('.guardian-pair');
-        if (guardianPairs.length === 0) {
-            alert('보호자 정보를 최소 1명 입력해주세요.');
-            return;
-        }
-
-        // 전화번호 정규식 (- 포함/미포함)
-        const phoneRegex = /^01([016789]?)(-?\d{3,4})(-?\d{4})$/;
-
-        let validGuardian = false;
+        const updatedNickname = nicknameInput.value.trim();
         const guardians = [];
-        for (const pair of guardianPairs) {
-            const nameInput = pair.querySelector('input[type="text"]:nth-child(1)');
-            const phoneInput = pair.querySelector('input[type="text"]:nth-child(2)');
-            if (!nameInput || !phoneInput) continue;
+        const pairs = guardianSection.querySelectorAll(".guardian-pair");
 
-            const nameVal = nameInput.value.trim();
-            const phoneVal = phoneInput.value.trim();
-
-            // 둘 다 빈칸이면 무시
-            if (!nameVal && !phoneVal) continue;
-
-            // 한쪽만 빈칸이면 오류
-            if (!nameVal || !phoneVal) {
-                alert('보호자 이름과 전화번호를 모두 입력해주세요.');
-                return;
+        pairs.forEach((pair) => {
+            const name = pair.querySelector("input:nth-child(1)").value.trim();
+            const phone = pair.querySelector("input:nth-child(2)").value.trim();
+            if (name && phone) {
+                guardians.push({ name, phoneNumber: phone });
             }
+        });
 
-            if (!phoneRegex.test(phoneVal)) {
-                alert(`전화번호 형식이 올바르지 않습니다: ${phoneVal}`);
-                return;
-            }
+        try {
+            const response = await fetch(`http://3.35.212.49:8080/users/${userId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nickname: updatedNickname, guardians })
+            });
 
-            guardians.push({ name: nameVal, phone: phoneVal });
-            validGuardian = true;
+            if (!response.ok) throw new Error("회원 정보 수정 실패");
+
+            // 수정 후 다시 정보 불러오기
+            const updatedRes = await fetch(`http://3.35.212.49:8080/users/${userId}`);
+            if (!updatedRes.ok) throw new Error("수정된 사용자 정보 가져오기 실패");
+
+            const updatedUser = await updatedRes.json();
+            localStorage.setItem("userEmail", updatedUser.email);
+            localStorage.setItem("userNickname", updatedUser.nickname);
+            localStorage.setItem("userPassword", updatedUser.password);
+            localStorage.setItem("userGuardians", JSON.stringify(updatedUser.guardians || []));
+
+            alert("회원 정보가 성공적으로 수정되고 저장되었습니다.");
+            window.location.reload();
+
+        } catch (err) {
+            console.error("회원정보 수정 오류", err);
+            alert("수정 중 오류가 발생했습니다.");
         }
-
-        if (!validGuardian) {
-            alert('보호자 이름과 전화번호를 모두 입력해주세요.');
-            return;
-        }
-
-        const updatedUserData = {
-            nickname: nicknameInput.value.trim(),
-            id: storedUser.id,
-            password: storedUser.password,
-            guardians: guardians,
-        };
-
-        localStorage.setItem('user', JSON.stringify(updatedUserData));
-        alert('회원정보가 수정되었습니다.');
     });
 
-    // 뒤로 가기 버튼
-    const backBtn = document.querySelector('.back-btn');
-    backBtn.addEventListener('click', () => {
-        history.back();
-    });
+    backBtn.addEventListener("click", () => history.back());
+
+    loadUserProfile();
 });

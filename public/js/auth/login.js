@@ -3,37 +3,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputId = form.querySelector('input[type="text"]');
     const inputPw = form.querySelector('input[type="password"]');
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const id = inputId.value.trim();
-        const pw = inputPw.value.trim();
+        const email = inputId.value.trim();
+        const password = inputPw.value.trim();
 
-        if (!id || !pw) {
-            alert('아이디와 비밀번호를 모두 입력해주세요.');
-            return;
-        }
+        const loginData = { email, password };
 
-        const storedUser = JSON.parse(localStorage.getItem('user'));
+        try {
+            const response = await fetch('http://3.35.212.49:8080/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(loginData)
+            });
 
-        if (!storedUser) {
-            alert('등록된 회원 정보가 없습니다. 회원 가입 후 로그인 해주세요.');
-            return;
-        }
+            if (!response.ok) {
+                const error = await response.text();
+                alert(`로그인 실패: ${error}`);
+                return;
+            }
 
-        if (id === storedUser.id && pw === storedUser.password) {
-            alert(`${id}님, 반갑습니다.`);
-            localStorage.setItem('loggedInUser', id);
-            window.location.href = '../../pages/main/safe.html';
-        } else {
-            alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+            const user = await response.json(); 
+
+            localStorage.setItem('userId', user.id);
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('userNickname', user.nickname);
+            // localStorage.setItem('userPassword', user.password); 
+
+            alert(`로그인 성공! ${user.nickname}님 환영합니다.`);
+            window.location.href = `../../pages/main/safe.html?id=${user.id}`;
+
+        } catch (error) {
+            console.error('로그인 중 오류 발생:', error);
+            alert('서버 연결에 실패했습니다.');
         }
     });
 
     // 뒤로 가기 버튼
     const backBtn = document.querySelector('.back-btn');
-    backBtn.addEventListener('click', () => {
-        history.back();
-    });
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            history.back();
+        });
+    }
 });
-  

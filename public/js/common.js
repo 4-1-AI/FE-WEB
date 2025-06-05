@@ -12,21 +12,23 @@ function updateTime() {
 
     timeElement.textContent = `${month}/${date} ${hours}:${minutes}`;
 }
-// 로그인 버튼
+
 document.addEventListener('DOMContentLoaded', () => {
     const linkElement = document.querySelector('a.link');
-    const loggedInUser = localStorage.getItem('loggedInUser');
+    const loggedInUser = localStorage.getItem('userId'); 
 
-    if (loggedInUser) {
-        linkElement.textContent = '회원정보 수정';
-        linkElement.href = '../../pages/auth/user-edit.html';  
-    } else {
-        linkElement.textContent = '로그인';
-        linkElement.href = '../../pages/auth/login.html';    
+    if (linkElement) {
+        if (loggedInUser) {
+            linkElement.textContent = '회원정보 수정';
+            linkElement.href = '../../pages/auth/user-edit.html';
+        } else {
+            linkElement.textContent = '로그인';
+            linkElement.href = '../../pages/auth/login.html';
+        }
     }
 });
-  
-// 1분마다 시간 업데이트
+
+
 setInterval(updateTime, 60000);
 
 updateTime();
