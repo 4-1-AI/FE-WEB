@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>CARE FIRE 감지 시스템</title>
-    <link rel="stylesheet" href="../../css/main/safe.css" />
+    <link rel="stylesheet" href="../../../public/css/main/safe.css" />
 </head>
 
 <body>
@@ -25,8 +25,10 @@
                     <video id="video" autoplay playsinline muted></video>
                     <canvas id="overlay"></canvas>
                 </div>
-                <div id="caution"></div>
-
+                <!-- 화재 감지 여부 및 결과 표시 -->
+                <div id="caution">화재 미감지</div>
+                <!-- 수신된 이미지 표시 -->
+                <img id="receivedImage" src="" alt="Received Image" style="max-width: 100%; max-height: 300px;"/>
 
                 <div class="info">
                     <div class="info-box">
@@ -42,8 +44,7 @@
             </div>
         </div>
     </div>
-    <script src="../../js/video-webrtc.js"></script>
-    <script src="../../js/common.js"></script>
+    <script src="../../../public/js/video.js"></script>
+    <script src="../../../public/js/common.js"></script>
 </body>
-
 </html>
