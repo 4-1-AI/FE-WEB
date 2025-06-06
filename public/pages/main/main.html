@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>CARE FIRE 감지 시스템</title>
+  <link rel="stylesheet" href="../../css/main/main.css" />
+  <style>
+    .hidden { display: none; }
+    .alert-bar.safe { background-color: green; }
+    .alert-bar.caution { background-color: orange; }
+    .alert-bar.danger { background-color: red; }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <!-- 상태별 상단바 -->
+    <div id="alert-bar" class="alert-bar">대기 중</div>
+
+    <!-- 타이틀과 시간 -->
+    <div class="title-row">
+      <div class="title">🧯 CARE FIRE</div>
+      <div class="time" id="time-label"></div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <!-- 영상 영역 -->
+        <div class="video">
+          <div class="live-badge">● 실시간 감지 중</div>
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
+        </div>
+
+        <!-- 상태별 뷰 -->
+        <div class="info" id="safe-view" class="status-view hidden">
+          <p>🔥 안전 상태입니다. 시스템이 정상 작동 중입니다.</p>
+        </div>
+
+        <div class="info hidden" id="caution-view">
+          <p>⚠️ 이상 감지됨. 사용자 응답을 기다리는 중입니다.</p>
+          <p id="countdown">3분 남음</p>
+          <button class="cancel-btn">응답 완료</button>
+        </div>
+
+        <div class="info hidden" id="danger-view">
+          <p>🚨 위험 단계 진입. 보호자에게 메시지가 발송되었습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+</body>
+</html>
