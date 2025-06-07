@@ -140,6 +140,15 @@ const ws = new WebSocket("ws://localhost:8000/ws/stream");
 
 ws.onopen = () => {
   console.log("✅ WebSocket 연결됨");
+
+  const userId = localStorage.getItem("userId");
+  if (userId) {
+    ws.send(userId);  // 서버는 첫 메시지로 userId 수신함
+    console.log("📤 userId 전송됨:", userId);
+  } else {
+    console.warn("❗ userId가 localStorage에 없습니다.");
+  }
+
   //웹캠 스트리밍 시작
   navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     .then((stream) => {
