@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({
-  port: 8080,
+  port: 8000,
   path: '/ws-stream',
 });
 
@@ -19,4 +19,4 @@ wss.on('connection', (ws) => {
   });
 });
 
-console.log('🚀 WebSocket 서버 실행 중: ws://localhost:8080/ws-stream');
+console.log('🚀 WebSocket 서버 실행 중: ws://3.35.212.49:8000/ws-stream');

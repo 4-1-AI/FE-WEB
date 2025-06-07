@@ -1,0 +1,14 @@
+# Firebase 관련
+.firebase
+.firebaserc
+firebase.json
+
+# Node/npm 관련
+node_modules
+package-lock.json
+
+# 개발 툴 관련
+.vscode
+.git
+.gitignore
+README.md

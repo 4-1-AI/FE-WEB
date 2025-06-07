@@ -136,7 +136,7 @@ function updateView(status) {
 
 
 //웹 소켓 연결
-const ws = new WebSocket("ws://localhost:8000/ws/stream");
+const ws = new WebSocket("ws://3.35.212.49:8000/ws/stream");
 
 ws.onopen = () => {
   console.log("✅ WebSocket 연결됨");

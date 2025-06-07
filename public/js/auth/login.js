@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // localStorage.setItem('userPassword', user.password); 
 
             // 모델 서버에 사용자 정보 전달
-            await fetch('http://localhost:8000/api/user-info', {
+            await fetch('http://3.35.212.49:8000/api/user-info', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
