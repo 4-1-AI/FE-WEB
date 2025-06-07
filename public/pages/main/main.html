@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8" />
     <title>CARE FIRE 감지 시스템</title>
-    <link rel="stylesheet" href="../../css/main/caution.css" />
+    <link rel="stylesheet" href="../../css/main/main.css" />
 </head>
 
 <body>
     <div class="main-container">
-        <div class="alert-bar">이상 감지</div>
+        <div class="alert-bar safe">안전</div>
+        <div class="alert-bar caution hidden">이상 감지</div>
+        <div class="alert-bar danger hidden">위험</div>
+
         <div class="title-row">
             <div class="title">🧯 CARE FIRE</div>
-            <div class="time">5/17 07:57</div>
+            <div class="time" id="time-label">5/17 07:57</div>
         </div>
         <div>
             <a href="" class="link">로그인</a>
@@ -27,36 +30,31 @@
                 </div>
                 <div id="caution"></div>
 
-
                 <div class="info">
-                    <div class="info-box">
-                        <p id="basic">AI 위험 판단도</p>
-                        <p id="orange">79%</p>
-                        <div class="divider"></div>
-                        <p id="basic">확산 속도</p>
-                        <p id="orange">45% 증가</p>
-                        <div class="divider"></div>
-                        <p id="basic">경고 발생 시각: 25/05/17 18:54</p>
-                    </div>
-                    <div class="info-box">
+                    <div class="info-box response-wait">
                         <p id="basic">사용자 응답 대기</p>
                         <div class="row">
                             <p id="red" class="countdown">2분 42초 남음</p>
                             <button class="cancel-btn">✕</button>
                         </div>
                     </div>
-                    <button class="warn-btn">주의 단계 🔥</button>
+
+                    <div class="info-box guardian-msg hidden" id="massage">
+                        <p id="basic">보호자에게 메시지 발송됨 ✅</p>
+                    </div>
+
+                    <button class="warn-btn safe">안전 단계 🔥</button>
+                    <button class="warn-btn caution hidden">주의 단계 🔥</button>
+                    <button class="warn-btn danger hidden">위험 단계 🔥</button>
                 </div>
-
-
             </div>
-            <div class="footer-text">
+            <div class="footer-text caution hidden">
                 🔔 3분동안 응답이 없을 경우 보호자에게 문자 메시지가 발송됩니다.
             </div>
         </div>
     </div>
-    <script src="../../js/video.js"></script>
     <script src="../../js/common.js"></script>
+    <script src="../../js/main.js"></script>
 </body>
 
 </html>

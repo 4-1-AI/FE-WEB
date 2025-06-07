@@ -8,10 +8,33 @@ body {
     flex-direction: column;
 }
 
-.alert-bar {
+/*상태별*/
+.alert-bar.safe {
+    position: relative;
+    width: 100vw;
+    background-color: #69C368;
+    text-align: center;
+    font-weight: bold;
+    padding: 6px;
+    color: #555;
+    box-sizing: border-box;
+}
+
+.alert-bar.caution {
     position: relative;
     width: 100vw;
     background-color: #fcd93d;
+    text-align: center;
+    font-weight: bold;
+    padding: 6px;
+    color: #555;
+    box-sizing: border-box;
+}
+
+.alert-bar.danger {
+    position: relative;
+    width: 100vw;
+    background-color: #FC4C4C;
     text-align: center;
     font-weight: bold;
     padding: 6px;
@@ -111,6 +134,7 @@ canvas {
     font-size: 13px;
     border-radius: 20px;
     font-weight: bold;
+    z-index: 10;
 }
 
 .info {
@@ -181,8 +205,35 @@ canvas {
     font-size: 16px;
 }
 
-.warn-btn {
+/*상태별*/
+.warn-btn.safe {
+    background-color: #69C368;
+    color: #ffffff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 10px;
+    font-size: 35px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.warn-btn.caution {
     background-color: #FFC43C;
+    color: #ffffff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 10px;
+    font-size: 35px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.warn-btn.danger {
+    background-color: #FC4C4C;
     color: #ffffff;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     border: none;
@@ -201,10 +252,15 @@ canvas {
     margin: 10px 0px;
 }
 
-.footer-text {
+/*상태별*/
+.footer-text.caution {
     text-align: center;
     font-size: 14px;
     color: #666;
     width: 100%;
     margin-top: 10px;
+}
+
+.hidden {
+    display: none !important;
 }
