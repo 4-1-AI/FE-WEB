@@ -33,6 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('userNickname', user.nickname);
             // localStorage.setItem('userPassword', user.password); 
 
+            // 모델 서버에 사용자 정보 전달
+            await fetch('http://localhost:8000/api/user-info', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: user.id
+                })
+            });
+
             alert(`로그인 성공! ${user.nickname}님 환영합니다.`);
             window.location.href = `../../pages/main/state.html?id=${user.id}`;
 
