@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             alert(`로그인 성공! ${user.nickname}님 환영합니다.`);
-            window.location.href = `../../pages/main/state.html?id=${user.id}`;
+            window.location.href = `../../pages/main/main.html?id=${user.id}`;
 
         } catch (error) {
             console.error('로그인 중 오류 발생:', error);
