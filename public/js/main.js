@@ -60,10 +60,10 @@ function updateBufferedStatus(newStatus) {
   lastStatusChangeTime = now; // 상태 변경 시간 갱신
   updateView(currentStatus); // 실제 UI 반영 함수 호출
 
-  // 커션 상태가 5번 연속 감지되면 타이머
+  // caution 상태가 7번 연속 감지되면 타이머
   if (newStatus === "caution") {
     cautionCount++;
-    if (cautionCount >= 5) {
+    if (cautionCount >= 7) {
       startVisualSmsTimer();  
     }
   } else {
@@ -162,8 +162,8 @@ ws.onmessage = (event) => {
     // 'caution' 상태 감지 시 카운트 증가
     if (data.statusLabel === "caution") {
       cautionCount++;
-      if (cautionCount >= 5) {
-        startVisualSmsTimer(); // 커션 상태가 5번 연속되면 타이머 시작
+      if (cautionCount >= 7) {
+        startVisualSmsTimer(); // 커션 상태가 7번 연속되면 타이머 시작
       }
     } else {
       // 커션 상태가 아니면 카운트 리셋
@@ -208,7 +208,7 @@ let smsTimerInterval = null;
 let isSmsTimerRunning = false;
 
 // 타이머 시작 함수
-function startVisualSmsTimer(seconds = 180) {
+function startVisualSmsTimer(seconds = 10) {
   if (cautionCount < 5) return; 
 
   if (isSmsTimerRunning) return;
@@ -256,6 +256,7 @@ document.querySelector(".cancel-btn")?.addEventListener("click", (e) => {
   if (smsTimerInterval) {
     clearInterval(smsTimerInterval);
     smsTimerInterval = null;
+    cautionCount = 0;
   }
 
   const timerText = document.querySelector(".countdown");
@@ -272,7 +273,7 @@ document.querySelector(".cancel-btn")?.addEventListener("click", (e) => {
 
   //문자 취소
   if (userId) {
-    fetch("http://3.35.212.49:8080/alert/fire-cause/sms/stop", {
+    fetch("http://localhost:8080/alert/fire-cause/sms/stop", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

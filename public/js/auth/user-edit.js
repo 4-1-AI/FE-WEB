@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function loadUserProfile() {
         try {
-            const response = await fetch(`http://3.35.212.49:8080/users/${userId}`);
+            const response = await fetch(`http://localhost:8080/users/${userId}`);
             if (!response.ok) throw new Error("회원 정보를 불러오지 못했습니다.");
             const user = await response.json();
 
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch(`http://3.35.212.49:8080/users/${userId}`, {
+            const response = await fetch(`http://localhost:8080/users/${userId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ nickname: updatedNickname, guardians })
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) throw new Error("회원 정보 수정 실패");
 
             // 수정 후 다시 정보 불러오기
-            const updatedRes = await fetch(`http://3.35.212.49:8080/users/${userId}`);
+            const updatedRes = await fetch(`http://localhost:8080/users/${userId}`);
             if (!updatedRes.ok) throw new Error("수정된 사용자 정보 가져오기 실패");
 
             const updatedUser = await updatedRes.json();
