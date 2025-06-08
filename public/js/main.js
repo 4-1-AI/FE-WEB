@@ -20,7 +20,9 @@ let canSend = true;
 
 let currentStatus = "safe";
 let lastStatusChangeTime = Date.now();
+let cautionCount = 0; // 커션 상태 연속 감지 카운트
 updateView("safe");
+
 //상태 업데이트 & 버퍼링 로직
 function updateBufferedStatus(newStatus) {
   const now = Date.now(); // 현재 시각(ms). 상태 변경 조건 확인용 타이머 기준
@@ -57,6 +59,16 @@ function updateBufferedStatus(newStatus) {
   currentStatus = newStatus; // 현재 상태 갱신
   lastStatusChangeTime = now; // 상태 변경 시간 갱신
   updateView(currentStatus); // 실제 UI 반영 함수 호출
+
+  // 커션 상태가 5번 연속 감지되면 타이머
+  if (newStatus === "caution") {
+    cautionCount++;
+    if (cautionCount >= 5) {
+      startVisualSmsTimer();  
+    }
+  } else {
+    cautionCount = 0;
+  }
 }
 
 //ui 업데이트
@@ -97,46 +109,8 @@ function updateView(status) {
   }
 }
 
-
-// function updateView(status) {
-//     safeView.classList.add("hidden");
-//     cautionView.classList.add("hidden");
-//     dangerView.classList.add("hidden");
-//     alertBar.className = "alert-bar";
-
-//     switch (status) {
-//         case "safe":
-//             safeView.classList.remove("hidden");
-//             alertBar.textContent = "안전";
-//             alertBar.classList.add("safe");
-//             break;
-//         case "caution":
-//             cautionView.classList.remove("hidden");
-//             alertBar.textContent = "이상 감지";
-//             alertBar.classList.add("caution");
-//             break;
-//         case "danger":
-//             dangerView.classList.remove("hidden");
-//             alertBar.textContent = "위험 단계";
-//             alertBar.classList.add("danger");
-//             break;
-//         default:
-//             alertBar.textContent = "대기 중";
-//     }
-// }
-
-//연결 끊김 / 미수신 대비 타이머
-// function checkTimeout() {
-//     if (Date.now() - lastMessageTime > 5000) {
-//         updateView("safe");
-//     }
-//     setTimeout(checkTimeout, 1000);
-// }
-// checkTimeout();
-
-
 //웹 소켓 연결
-const ws = new WebSocket("ws://3.35.212.49:8000/ws/stream");
+const ws = new WebSocket("ws://localhost:8000/ws/stream");
 
 ws.onopen = () => {
   console.log("✅ WebSocket 연결됨");
@@ -176,6 +150,7 @@ ws.onopen = () => {
       console.error("🚫 웹캠 접근 실패:", err);
     });
 };
+
 //서버에서 감지 결과 수신 후 처리
 ws.onmessage = (event) => {
   lastMessageTime = Date.now();
@@ -183,6 +158,17 @@ ws.onmessage = (event) => {
   try {
     const data = JSON.parse(event.data);
     console.log("📦 WebSocket 수신 데이터:", data);
+
+    // 'caution' 상태 감지 시 카운트 증가
+    if (data.statusLabel === "caution") {
+      cautionCount++;
+      if (cautionCount >= 5) {
+        startVisualSmsTimer(); // 커션 상태가 5번 연속되면 타이머 시작
+      }
+    } else {
+      // 커션 상태가 아니면 카운트 리셋
+      cautionCount = 0;
+    }
 
     if (data.statusLabel) {
       updateView(data.statusLabel);
@@ -217,11 +203,96 @@ ws.onmessage = (event) => {
   }
 };
 
+//문자 타이머 !!
+let smsTimerInterval = null;
+let isSmsTimerRunning = false;
+
+// 타이머 시작 함수
+function startVisualSmsTimer(seconds = 180) {
+  if (cautionCount < 5) return; 
+
+  if (isSmsTimerRunning) return;
+  isSmsTimerRunning = true;
+
+  const timerText = document.querySelector(".countdown");
+  const responseBox = document.querySelector(".info-box.response-wait");
+  const cancelBtn = document.querySelector(".cancel-btn");
+
+  if (!timerText || !responseBox || !cancelBtn) return;
+
+  cancelBtn.classList.remove("hidden");
+  cancelBtn.disabled = false;
+  cancelBtn.style.opacity = 1;
+  cancelBtn.textContent = "✕";
+
+  responseBox.classList.remove("hidden");
+
+  let remaining = seconds;
+  timerText.textContent = formatTime(remaining);
+  timerText.style.color = "";
+
+  smsTimerInterval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(smsTimerInterval);
+      smsTimerInterval = null;
+      timerText.textContent = "⏰ 문자 발송 중...";
+      return;
+    }
+    timerText.textContent = formatTime(remaining);
+  }, 1000);
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}분 ${s.toString().padStart(2, "0")}초 남음`;
+}
+
+document.querySelector(".cancel-btn")?.addEventListener("click", (e) => {
+  const userId = localStorage.getItem("userId");
+
+  //타이머 정지
+  if (smsTimerInterval) {
+    clearInterval(smsTimerInterval);
+    smsTimerInterval = null;
+  }
+
+  const timerText = document.querySelector(".countdown");
+  if (timerText) {
+    timerText.textContent = "⛔ 문자 발송이 취소되었습니다";
+    timerText.style.color = "gray";
+  }
+
+  const cancelBtn = e.target;
+  cancelBtn.disabled = true;
+  cancelBtn.style.opacity = 0.5;
+  cancelBtn.textContent = "취소됨";
+  isSmsTimerRunning = false;
+
+  //문자 취소
+  if (userId) {
+    fetch("http://3.35.212.49:8080/alert/fire-cause/sms/stop", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId: parseInt(userId) })
+    })
+      .then(res => res.text())
+      .then(msg => {
+        console.log("🛑 문자 예약 취소됨:", msg);
+      })
+      .catch(err => {
+        console.error("❌ 문자 취소 실패:", err);
+      });
+  }
+});
+
 ws.onclose = () => {
   console.log("🔌 WebSocket 연결 종료");
   updateView("safe");
 };
-
 
 // 상태 강제 지정 테스트용
 window.updateView = updateView;
